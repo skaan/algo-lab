@@ -1,77 +1,68 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
-#include <utility>
-#include <map>
+#include <algorithm>
 
-int rec(
-  std::vector<int> v,
-  std::vector<std::vector<int>> &maxVector,
-  std::vector<std::vector<int>> &minVector,
-  int l,
-  int r,
-  bool ownTurn)
-{
-  if (l <= r) {
-    // maximize own pick
-    if (ownTurn) {
-      if (maxVector[l][r] != 0) {
-        return maxVector[l][r];
-      } else {
-        int maxValue = std::max(
-          v[l] + rec(v, maxVector, minVector, l + 1, r, !ownTurn),
-          v[r] + rec(v, maxVector, minVector, l, r - 1, !ownTurn)
-        );
-        maxVector[l][r] = maxValue;
-        return maxValue;
-      }
-    // maximize friend pick (minimize own future)
-    } else {
-      if (minVector[l][r] != 0) {
-        return minVector[l][r];
-      } else {
-        int minValue = std::min(
-          rec(v, maxVector, minVector, l + 1, r, !ownTurn),
-          rec(v, maxVector, minVector, l, r - 1, !ownTurn)
-        );
-        minVector[l][r] = minValue;
-        return minValue;
-      } 
+void insertToData(std::vector<int> &bestLocations, int coordSum) {
+  if(coordSum % 2 != 0) {
+    if(coordSum > 0) {
+      bestLocations.push_back(coordSum/2);
+      bestLocations.push_back((coordSum/2)+1);
     }
-  }
-  return 0;
+    else {
+      bestLocations.push_back((coordSum/2) - 1);
+      bestLocations.push_back(coordSum/2);
+    }
+  } else bestLocations.push_back(coordSum/2);
 }
 
-void handleTestcase() 
+void testcase() 
 {
-  int n;
-  std::cin >> n;
+  int n; std::cin >> n;
   
   // setup data structure
-  std::vector<int> v(n, 0);
+  std::vector<int> parasols(n, 0);
 
   // iterate over numbers
   for(int i = 0; i < n; ++i) {
-    std::cin >> v[i];
+    std::cin >> parasols[i];
+  }
+  std::sort(parasols.begin(), parasols.end());
+
+  std::vector<int> bestLocations;
+  int start = 0, minDistance = 0, maxParasols = 0;
+  for(int end = 1; end < n; end++) {
+    while(start < end && parasols[end] - parasols[start] > 200) start++;
+
+    int coordSum = parasols[end] + parasols[start];
+    int newDistance = std::max(std::abs(parasols[end] - coordSum/2), std::abs(coordSum/2 - parasols[start]));
+
+    if((end - start + 1 > maxParasols) || (end - start + 1 == maxParasols && minDistance > newDistance)) {
+      maxParasols = end - start + 1;
+      bestLocations.clear();
+      minDistance = newDistance;
+      insertToData(bestLocations, coordSum);
+    } else if(end - start + 1 == maxParasols && minDistance == newDistance) {
+      insertToData(bestLocations, coordSum);
+    }
   }
 
-  // setup data structure for dp problem
-  std::vector<std::vector<int>> maxVector(n, std::vector<int>(n, 0));
-  std::vector<std::vector<int>> minVector(n, std::vector<int>(n, 0));
-
-  std::cout << rec(v,  maxVector, minVector, 0, n - 1, true) << "\n";
+  std::cout << maxParasols << " " << minDistance << "\n";
+  for(int i = 0; i < (int)bestLocations.size(); i++) {
+      std::cout << bestLocations[i];
+      if(i != (int)bestLocations.size() - 1) std::cout << " ";
+  }
+  std::cout << "\n";
 }
 
-int main() 
+int main()
 {
   std::ios_base::sync_with_stdio(false);
   
   // get number of test cases
-  int t;
-  std::cin >> t;
+  int t; std::cin >> t;
 
   // iterate over all test cases
   for(int i = 0; i < t; i++) {
-    handleTestcase();
+    testcase();
   }
 }

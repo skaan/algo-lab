@@ -1,120 +1,44 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
-#include <tuple>
-#include <map>
 
-int playAsHolmes(
-  int n,
-  int r,
-  int b,
-  int round,
-  std::vector<std::vector<int>> &tr,
-  std::map<std::tuple<int, int, int>, int> &maxMap,
-  std::map<std::tuple<int, int, int>, int> &minMap);
+typedef std::vector<int> VI;
+const int MAX_N = 50001;
 
-int playAsMoriarty(
-  int n,
-  int r,
-  int b,
-  int round,
-  std::vector<std::vector<int>> &tr,
-  std::map<std::tuple<int, int, int>, int> &maxMap,
-  std::map<std::tuple<int, int, int>, int> &minMap)
+int testcase()
 {
-  if (r == n) return 0;
-  else if (b == n) return 1;
+  int n, m; std::cin >> n >> m;
+  int r, b; std::cin >> r >> b;
 
-  std::tuple<int, int, int> t(r, b, round % 2);
-
-  if (maxMap.count(t) == 1) {
-    return maxMap.at(t);
-  } else {
-    int res = -1;
-    if (round % 2 == 1) {
-      for(int i = 0; i < tr[b].size(); i++) {
-        res = std::max(
-          res,
-          playAsHolmes(n, r, tr[b][i], round + 1, tr, maxMap, minMap)
-        );
-      }
-    } else {
-      for(int i = 0; i < tr[r].size(); i++) {
-        res = std::max(
-          res,
-          playAsHolmes(n, tr[r][i], b, round + 1, tr, maxMap, minMap)
-        );
-      }
-    }
-    maxMap.insert(std::make_pair(t, res));
-    return res;
-  }
-}
-
-int playAsHolmes(
-  int n,
-  int r,
-  int b,
-  int round,
-  std::vector<std::vector<int>> &tr,
-  std::map<std::tuple<int, int, int>, int> &maxMap,
-  std::map<std::tuple<int, int, int>, int> &minMap)
-{
-  if (r == n) return 0;
-  else if (b == n) return 1;
-
-  std::tuple<int, int, int> t(r, b, round % 2);
-
-  if(minMap.count(t) == 1) {
-    return minMap.at(t);
-  } else {
-    int res = 2;
-    if (round % 2 == 1) {
-      for(int i = 0; i < tr[r].size(); i++) {
-        res = std::min(
-          res,
-          playAsMoriarty(n, tr[r][i], b, round, tr, maxMap, minMap)
-        );
-      }
-    } else {
-      for(int i = 0; i < tr[b].size(); i++) {
-        res = std::min(
-          res,
-          playAsMoriarty(n, r, tr[b][i], round, tr, maxMap, minMap)
-        );
-      }
-    }
-    minMap.insert(std::make_pair(t, res));
-    return res;
-  }
-}
-
-void handleTestcase()
-{
-  int n, m;
-  std::cin >> n;
-  std::cin >> m;
-
-  int r, b;
-  std::cin >> r;
-  std::cin >> b;
-  
-  // setup data structure
-  std::vector<std::vector<int>> tr(n, std::vector<int>());
+  // setup data structure for transitions
+  std::vector<VI> graph(n + 1, VI());
 
   // iterate over transitions and add to data structure
   for(int i = 0; i < m; ++i) {
-    int trStart, trEnd;
-    std::cin >> trStart;
-    std::cin >> trEnd;
-
-    tr[trStart].push_back(trEnd);
+    int u, v; std::cin >> u >> v;
+    graph[u].push_back(v);
   }
 
-  std::map<std::tuple<int, int, int>, int> maxMap;
-  std::map<std::tuple<int, int, int>, int> minMap;
+  // setup data structure for already computed results
+  VI mini(n + 1, MAX_N);
+  VI maxi(n + 1, -1);
 
-  std::cout << playAsHolmes(n, r, b, 1, tr, maxMap, minMap) << "\n";
+  mini[n] = 0;
+  maxi[n] = 0;
+
+  for(int i = n - 1; i >= 1; i--) {
+    for(int v: graph[i]) {
+      mini[i] =  std::min(mini[i], maxi[v] + 1);
+      maxi[i] = std::max(maxi[i], mini[v] + 1);
+    }
+  }
+
+  int sherlock = mini[r];
+  int moriarty = mini[b];
+
+  if (sherlock < moriarty) return 0;
+  if (moriarty < sherlock) return 1;
+  if (sherlock % 2 == 1) return 0;
+  return 1;
 }
 
 int main() 
@@ -127,6 +51,6 @@ int main()
 
   // iterate over all test cases
   for(int i = 0; i < t; i++) {
-    handleTestcase();
+    std::cout << testcase() << "\n";
   }
 }
