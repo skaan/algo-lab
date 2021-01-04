@@ -2,67 +2,61 @@
 #include <vector>
 #include <algorithm>
 
-void insertToData(std::vector<int> &bestLocations, int coordSum) {
-  if(coordSum % 2 != 0) {
-    if(coordSum > 0) {
-      bestLocations.push_back(coordSum/2);
-      bestLocations.push_back((coordSum/2)+1);
-    }
-    else {
-      bestLocations.push_back((coordSum/2) - 1);
-      bestLocations.push_back(coordSum/2);
-    }
-  } else bestLocations.push_back(coordSum/2);
+std::vector<int> v;
+std::vector<std::vector<int>> memo;
+
+int rec(int l, int r)
+{
+  if (r < l)
+    return 0;
+  else if (r == l)
+    return v[l];
+  else if (memo[l][r] != -1)
+  {
+    return memo[l][r];
+  }
+  else
+  {
+    int takeLeftCoin = v[l] + std::min(rec(l + 2, r), rec(l + 1, r - 1));
+    int takeRightCoin = v[r] + std::min(rec(l + 1, r - 1), rec(l, r - 2));
+    int val = std::max(takeLeftCoin, takeRightCoin);
+    memo[l][r] = val;
+    return val;
+  }
 }
 
-void testcase() 
+void testcase()
 {
-  int n; std::cin >> n;
-  
-  // setup data structure
-  std::vector<int> parasols(n, 0);
+  int n;
+  std::cin >> n;
+  v.clear();
+  memo.clear();
 
-  // iterate over numbers
-  for(int i = 0; i < n; ++i) {
-    std::cin >> parasols[i];
+  for (int i = 0; i < n; i++)
+  {
+    memo.push_back(std::vector<int>(n, -1));
   }
-  std::sort(parasols.begin(), parasols.end());
-
-  std::vector<int> bestLocations;
-  int start = 0, minDistance = 0, maxParasols = 0;
-  for(int end = 1; end < n; end++) {
-    while(start < end && parasols[end] - parasols[start] > 200) start++;
-
-    int coordSum = parasols[end] + parasols[start];
-    int newDistance = std::max(std::abs(parasols[end] - coordSum/2), std::abs(coordSum/2 - parasols[start]));
-
-    if((end - start + 1 > maxParasols) || (end - start + 1 == maxParasols && minDistance > newDistance)) {
-      maxParasols = end - start + 1;
-      bestLocations.clear();
-      minDistance = newDistance;
-      insertToData(bestLocations, coordSum);
-    } else if(end - start + 1 == maxParasols && minDistance == newDistance) {
-      insertToData(bestLocations, coordSum);
-    }
+  for (int i = 0; i < n; i++)
+  {
+    int vi;
+    std::cin >> vi;
+    v.push_back(vi);
   }
 
-  std::cout << maxParasols << " " << minDistance << "\n";
-  for(int i = 0; i < (int)bestLocations.size(); i++) {
-      std::cout << bestLocations[i];
-      if(i != (int)bestLocations.size() - 1) std::cout << " ";
-  }
-  std::cout << "\n";
+  std::cout << rec(0, n - 1) << "\n";
 }
 
 int main()
 {
   std::ios_base::sync_with_stdio(false);
-  
+
   // get number of test cases
-  int t; std::cin >> t;
+  int t;
+  std::cin >> t;
 
   // iterate over all test cases
-  for(int i = 0; i < t; i++) {
+  for (int i = 0; i < t; i++)
+  {
     testcase();
   }
 }
