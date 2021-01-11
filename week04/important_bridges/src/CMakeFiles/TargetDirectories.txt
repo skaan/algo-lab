@@ -1,0 +1,5 @@
+/Users/kaan/workspace/algo-lab/week04/important_bridges/src/CMakeFiles/cgal_check_build_system.dir
+/Users/kaan/workspace/algo-lab/week04/important_bridges/src/CMakeFiles/rebuild_cache.dir
+/Users/kaan/workspace/algo-lab/week04/important_bridges/src/CMakeFiles/edit_cache.dir
+/Users/kaan/workspace/algo-lab/week04/important_bridges/src/CMakeFiles/ALL_CGAL_TARGETS.dir
+/Users/kaan/workspace/algo-lab/week04/important_bridges/src/CMakeFiles/main.dir

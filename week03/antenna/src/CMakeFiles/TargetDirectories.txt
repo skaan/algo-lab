@@ -1,2 +1,5 @@
+/Users/kaan/workspace/algo-lab/week03/antenna/src/CMakeFiles/cgal_check_build_system.dir
 /Users/kaan/workspace/algo-lab/week03/antenna/src/CMakeFiles/rebuild_cache.dir
 /Users/kaan/workspace/algo-lab/week03/antenna/src/CMakeFiles/edit_cache.dir
+/Users/kaan/workspace/algo-lab/week03/antenna/src/CMakeFiles/ALL_CGAL_TARGETS.dir
+/Users/kaan/workspace/algo-lab/week03/antenna/src/CMakeFiles/main.dir
