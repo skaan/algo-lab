@@ -1,0 +1,2 @@
+/Users/kaan/workspace/algo-lab/week07/what_is_the_maximum/src/CMakeFiles/rebuild_cache.dir
+/Users/kaan/workspace/algo-lab/week07/what_is_the_maximum/src/CMakeFiles/edit_cache.dir

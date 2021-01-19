@@ -1,0 +1,5 @@
+/Users/kaan/workspace/algo-lab/week06/knights/src/CMakeFiles/cgal_check_build_system.dir
+/Users/kaan/workspace/algo-lab/week06/knights/src/CMakeFiles/rebuild_cache.dir
+/Users/kaan/workspace/algo-lab/week06/knights/src/CMakeFiles/edit_cache.dir
+/Users/kaan/workspace/algo-lab/week06/knights/src/CMakeFiles/ALL_CGAL_TARGETS.dir
+/Users/kaan/workspace/algo-lab/week06/knights/src/CMakeFiles/main.dir
